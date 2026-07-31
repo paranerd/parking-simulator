@@ -1,0 +1,169 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.ps-app {
+  min-height: 100vh;
+  padding: 14px;
+}
+
+.ps-buehne {
+  max-width: 660px;
+  margin: 0 auto;
+  display: grid;
+  gap: $sp-3;
+}
+
+.ps-kennzahlen {
+  display: flex;
+  gap: $sp-3;
+  flex-wrap: wrap;
+
+  &__kachel { flex: 1 1 120px; }
+
+  &__wert {
+    font-family: $mono;
+    font-size: 17px;
+    font-weight: 600;
+
+    &--gut { color: $frei; }
+    &--schlecht { color: $besetzt; }
+    &--still { color: $beton-dim; }
+  }
+}
+
+.ps-stellplaetze {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: 10px;
+  background: $panel-alt;
+  border: 1px solid $linie;
+
+  &__bucht {
+    width: 15px;
+    height: 25px;
+    display: grid;
+    place-items: center;
+    border-left: 1.5px solid rgba($markier, 0.33);
+    border-right: 1.5px solid rgba($markier, 0.33);
+    border-bottom: 1.5px solid rgba($markier, 0.33);
+  }
+
+  &__auto {
+    width: 9px;
+    height: 17px;
+    border-radius: 2px;
+    background: $frei;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+
+    &--belegt { opacity: 0.85; }
+  }
+}
+
+.ps-preis {
+  &__kopf {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  &__wert {
+    font-family: $mono;
+    font-size: 20px;
+    font-weight: 600;
+    color: $markier;
+  }
+
+  input[type='range'] {
+    width: 100%;
+    margin: 6px 0 2px;
+    accent-color: $markier;
+    @include fokus;
+  }
+
+  &__fuss {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: $sp-2 + 1;
+    margin-top: 6px;
+  }
+
+  &__daten {
+    font-family: $mono;
+    font-size: 10.5px;
+    color: $beton-dim;
+    line-height: 1.7;
+  }
+
+  &__alarm { color: $besetzt; }
+}
+
+// Engpass-Anzeige: welche Seite limitiert gerade?
+.ps-engpass {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  font-family: $mono;
+  font-size: 10px;
+
+  &__seite {
+    flex: 1;
+    padding: 6px 8px;
+    background: $panel-alt;
+    border: 1px solid $linie;
+    opacity: 0.5;
+
+    &--aktiv {
+      opacity: 1;
+      border-color: $besetzt;
+      color: $besetzt;
+    }
+  }
+
+  &__zahl { font-size: 15px; font-weight: 600; display: block; }
+}
+
+.ps-ausbau { display: grid; gap: $sp-2; }
+.ps-ausbau__zeile { display: flex; gap: $sp-2; }
+.ps-ausbau__zehn { width: 78px; flex-shrink: 0; }
+
+.ps-tuning {
+  &__schalter {
+    background: none;
+    border: none;
+    padding: 0;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    @include eyebrow($markier);
+    @include fokus;
+  }
+
+  &__gitter {
+    margin-top: $sp-3;
+    display: grid;
+    gap: 0 $sp-4;
+    grid-template-columns: 1fr;
+
+    @media (min-width: $bp-schmal) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &__aktionen {
+    display: flex;
+    gap: $sp-2;
+    margin-top: 6px;
+    grid-column: 1 / -1;
+  }
+}
+
+.ps-fuss {
+  font-family: $mono;
+  font-size: 10px;
+  color: $beton-dim;
+  text-align: center;
+  padding-bottom: $sp-2;
+}

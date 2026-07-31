@@ -1,0 +1,23 @@
+@use 'tokens' as *;
+
+@mixin eyebrow($farbe: $beton-dim) {
+  font-family: $mono;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: $farbe;
+}
+
+@mixin led($farbe) {
+  font-family: $mono;
+  font-weight: 600;
+  color: $farbe;
+  text-shadow: 0 0 18px rgba($farbe, 0.35);
+}
+
+@mixin fokus {
+  &:focus-visible {
+    outline: 2px solid $markier;
+    outline-offset: 2px;
+  }
+}

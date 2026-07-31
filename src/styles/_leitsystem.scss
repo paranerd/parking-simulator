@@ -1,0 +1,83 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.ps-leitsystem {
+  background: #0a0c08;
+  border: 1px solid $linie;
+  border-top: 3px solid $markier;
+  padding: $sp-4;
+
+  &__kopf { display: flex; align-items: center; gap: 14px; }
+
+  &__schild {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    background: $schild;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 30px;
+    color: #fff;
+  }
+
+  &__mitte { flex: 1; min-width: 0; }
+
+  &__zaehler {
+    font-size: 34px;
+    line-height: 1.05;
+    letter-spacing: 0.04em;
+    @include led($frei);
+
+    &--voll { @include led($besetzt); }
+  }
+
+  &__auslastung {
+    font-family: $mono;
+    font-size: 22px;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  &__ebenen {
+    margin-top: $sp-3;
+    padding-top: 10px;
+    border-top: 1px dashed $linie;
+    display: grid;
+    gap: 3px;
+  }
+
+  &__ebene {
+    display: flex;
+    align-items: center;
+    gap: $sp-2 + 1;
+    font-family: $mono;
+    font-size: 11px;
+  }
+
+  &__ebene-name { color: $beton-dim; width: 58px; }
+
+  &__balken {
+    flex: 1;
+    height: 5px;
+    background: $linie;
+    overflow: hidden;
+  }
+
+  &__fuellung {
+    height: 100%;
+    background: $frei;
+    transition: width 0.4s ease;
+
+    &--voll { background: $besetzt; }
+  }
+
+  &__ebene-frei {
+    width: 36px;
+    text-align: right;
+    color: $frei;
+
+    &--voll { color: $besetzt; }
+  }
+}
