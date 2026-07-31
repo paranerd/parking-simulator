@@ -1,0 +1,74 @@
+@use 'tokens' as *;
+@use 'mixins' as *;
+
+.ps-eyebrow { @include eyebrow; }
+
+.ps-panel {
+  background: $panel;
+  border: 1px solid $linie;
+  padding: $sp-3 + 2;
+
+  &--kompakt { padding: 10px; }
+  &--warnung { border-left: 3px solid $besetzt; }
+}
+
+.ps-knopf {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $sp-2;
+  padding: 9px 11px;
+  text-align: left;
+  font-family: $sans;
+  font-size: 13px;
+  background: $panel-alt;
+  color: $beton;
+  border: 1px solid $linie;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  @include fokus;
+
+  &:hover:not(:disabled) { border-color: $beton-dim; }
+
+  &--haupt {
+    background: $markier;
+    color: $asphalt;
+    border-color: $markier;
+    font-weight: 600;
+  }
+
+  &--geist {
+    background: transparent;
+    border-color: $frei;
+    color: $frei;
+    font-family: $mono;
+    font-size: 10px;
+    padding: 4px 8px;
+    width: auto;
+    white-space: nowrap;
+  }
+
+  &:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  &__preis { font-family: $mono; font-size: 11px; }
+}
+
+.ps-regler {
+  margin-bottom: 9px;
+
+  &__kopf {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  &__wert { font-family: $mono; font-size: 10px; color: $markier; }
+
+  input[type='range'] {
+    width: 100%;
+    margin-top: 2px;
+    accent-color: $markier;
+    @include fokus;
+  }
+}
