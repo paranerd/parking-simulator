@@ -59,3 +59,16 @@ bleibt erhalten.
 
 Alle Konstanten stehen in `src/game/config.ts` und lassen sich im
 Tuning-Panel der laufenden App justieren, ohne neu zu bauen.
+
+```bash
+python3 tools/balance.py
+```
+
+Rechnet das Modell unabhängig vom Spielcode nach und gibt die Zielwerte
+für alle Stufen aus.
+
+## Weiterlesen
+
+[DESIGN.md](DESIGN.md) enthält das vollständige Ökonomiemodell mit
+Herleitung, die Begründung hinter jeder Konstante, die bereits behobenen
+Balance-Fehler, die offenen Punkte und den Backlog.
