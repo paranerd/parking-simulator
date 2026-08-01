@@ -83,10 +83,38 @@ export function kennzahlen(
 const untergrenze = (stufe: number) =>
   stufe === 0 ? 0 : STUFEN[stufe - 1].max;
 
+let refState: State | null = null;
+let refCfg: Config | null = null;
+let refWert = 0;
+
+/**
+ * Ertragskraft des Betriebs beim gewinnoptimalen Preis.
+ *
+ * Kostenformeln leiten sich hiervon ab statt vom tatsächlich gefahrenen
+ * Umsatz. Sonst zieht der Preisregler die Baukosten mit: auf Stufe 0 (fix = 0)
+ * kürzte sich der Preis komplett heraus, der Regler war für den Fortschritt
+ * wirkungslos, und oberhalb des Optimums wurden Plätze sogar *billiger*.
+ * Die Absicht der umsatzgekoppelten Kosten — Mitskalieren mit Stadt,
+ * Qualität, Reichweite und Prestige — bleibt unberührt, denn all das steckt
+ * im Optimum. Da die Zielwerte in DESIGN.md ohnehin beim gewinnoptimalen
+ * Preis gerechnet sind, bleibt das Balancing unverändert.
+ *
+ * Der Cache greift über die Objektidentität: State und Config werden nie
+ * mutiert, ein neues Objekt bedeutet also zwingend einen neuen Wert. Damit
+ * kostet die Preissuche einen Durchlauf pro Frame statt einen je Kostenposten.
+ */
+export function referenzUmsatz(s: State, cfg: Config): number {
+  if (s !== refState || cfg !== refCfg) {
+    refWert = kennzahlen(s, cfg, optimalerPreis(s, cfg)).umsatz;
+    refState = s;
+    refCfg = cfg;
+  }
+  return refWert;
+}
+
 export function platzKosten(s: State, cfg: Config): number {
   const n = s.plaetze - untergrenze(s.stufe);
-  const k = kennzahlen(s, cfg);
-  const proPlatz = s.plaetze > 0 ? k.umsatz / s.plaetze : 0.1;
+  const proPlatz = s.plaetze > 0 ? referenzUmsatz(s, cfg) / s.plaetze : 0.1;
   return cfg.tAmort * Math.max(proPlatz, 0.05) * Math.pow(cfg.r, n);
 }
 
@@ -98,11 +126,11 @@ export const autoKosten = (s: State, cfg: Config): number =>
 
 export const reichweiteKosten = (s: State, cfg: Config): number =>
   cfg.ezAmort *
-  Math.max(kennzahlen(s, cfg).umsatz, 0.4) *
+  Math.max(referenzUmsatz(s, cfg), 0.4) *
   Math.pow(cfg.ezWachstum, s.ezLevel);
 
 export const sprungKosten = (s: State, cfg: Config): number =>
-  cfg.sprungMin * 60 * Math.max(kennzahlen(s, cfg).umsatz, 0.5);
+  cfg.sprungMin * 60 * Math.max(referenzUmsatz(s, cfg), 0.5);
 
 export const prestigePunkte = (gesamtumsatz: number): number =>
   Math.floor(0.02 * Math.sqrt(gesamtumsatz));
