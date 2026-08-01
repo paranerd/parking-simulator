@@ -158,19 +158,39 @@ Träge Annäherung statt Sprung, damit kurze Spitzen nicht durchschlagen.
 ### Kostenformeln
 
 ```
-platzKosten     = cfg.tAmort × max(umsatz/plätze, 0.05) × cfg.r^n
+referenzUmsatz  = umsatz beim gewinnoptimalen Preis (preisunabhängig)
+
+platzKosten     = cfg.tAmort × max(referenzUmsatz/plätze, 0.05) × cfg.r^n
                   (n = Plätze innerhalb der aktuellen Stufe)
 qualiKosten     = cfg.qualiBasis × max(plätze, 4) × 1.6^level
 autoKosten      = cfg.qualiBasis × 2.2 × max(plätze, 4) × 1.9^level
-reichweiteKosten= cfg.ezAmort × max(umsatz, 0.4) × cfg.ezWachstum^level
-sprungKosten    = cfg.sprungMin × 60 × max(umsatz, 0.5)
+reichweiteKosten= cfg.ezAmort × max(referenzUmsatz, 0.4) × cfg.ezWachstum^level
+sprungKosten    = cfg.sprungMin × 60 × max(referenzUmsatz, 0.5)
 prestigePunkte  = floor(0.02 × √gesamtumsatz)
 ```
 
-Dass `platzKosten` und `reichweiteKosten` aus dem *aktuellen Umsatz* abgeleitet
-werden statt aus festen Beträgen, ist Absicht: sie skalieren automatisch mit
-Stadt, Qualität und Prestige mit. Sonst müsste jede Stufe von Hand nachbalanciert
-werden.
+Dass `platzKosten`, `reichweiteKosten` und `sprungKosten` aus dem Umsatz
+abgeleitet werden statt aus festen Beträgen, ist Absicht: sie skalieren
+automatisch mit Stadt, Qualität, Reichweite und Prestige mit. Sonst müsste jede
+Stufe von Hand nachbalanciert werden.
+
+Maßgeblich ist dabei der **Referenzumsatz beim gewinnoptimalen Preis**, nicht
+der tatsächlich gefahrene Umsatz. Am aktuellen Umsatz gekoppelt zog der
+Preisregler die Baukosten mit, und das nahm ihm die Wirkung:
+
+- Auf Stufe 0 ist `fix = 0`, also `netto = umsatz`. Da auch die Kosten
+  proportional zum Umsatz waren, kürzte sich der Preis vollständig heraus —
+  die Zeit bis zum nächsten Platz lag bei jedem Preis bei exakt 10,2 s. Der
+  Regler war für den Fortschritt reine Dekoration, ausgerechnet dort, wo
+  Spieler ihn zum ersten Mal ausprobieren.
+- Oberhalb des Optimums fiel der Umsatz und damit der Kaufpreis: zu teuer
+  parken zu lassen ließ Stellplätze *billiger* aussehen.
+
+Mit dem Referenzumsatz ist die Kostenseite preisunabhängig, der Preishebel
+wirkt voll auf den Fortschritt (auf Stufe 0 jetzt 20,3 s → 10,2 s Richtung
+Optimum), und jenseits des Optimums wird es wieder schlechter — der Zielkonflikt
+bleibt also erhalten. Die Zielwerte unten sind ohnehin beim gewinnoptimalen
+Preis gerechnet, deshalb ändern sich die Kostenbeträge dort um keinen Cent.
 
 ---
 
